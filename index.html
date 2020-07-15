@@ -8,10 +8,6 @@
     <script src="./libs/jquery-1.12.4.min.js"></script>
     <script src="./libs/template-web.js"></script>
     <style>
-        /* body {
-            background: url(./images/1.jpg) no-repeat;
-            background-size: cover;
-        } */
         #bgcDiv {
             width: 100%;
             position: absolute;
@@ -142,6 +138,7 @@
             </div>
         </div>
     </div>
+
 
     <script id="tiangou" type="text/html">
         <div class="item">
@@ -284,86 +281,95 @@
                 }
             })
 
+            // $('#next').click(function () {
+            //     window.location.reload();
+            // })
+
+            function getXiao() {
+                //舔狗日记：http://api.tianapi.com/txapi/tiangou/index
+                $.get("http://api.tianapi.com/txapi/tiangou/index?key=" + APIKEY,
+                    function (data, status) {
+                        console.log(data);
+                        $('.content').append(template('tiangou', data));
+                    }
+                );
+
+                //彩虹屁：http://api.tianapi.com/txapi/tiangou/index
+                $.get("http://api.tianapi.com/txapi/caihongpi/index?key=" + APIKEY,
+                    function (data, status) {
+                        console.log(data);
+                        $('.content').append(template('caihongpi', data));
+                    }
+                );
+
+                //毒鸡汤：http://api.tianapi.com/txapi/tiangou/index
+                $.get("http://api.tianapi.com/txapi/dujitang/index?key=" + APIKEY,
+                    function (data, status) {
+                        console.log(data);
+                        $('.content').append(template('jitang', data));
+                    }
+                );
+
+                //朋友圈文案：http://api.tianapi.com/txapi/pyqwenan/index?key=APIKEY
+                $.get("http://api.tianapi.com/txapi/pyqwenan/index?key=" + APIKEY,
+                    function (data, status) {
+                        console.log(data);
+                        $('.content').append(template('wenan', data));
+                    }
+                );
+
+                //互删句子：http://api.tianapi.com/txapi/hsjz/index?key=APIKEY
+                $.get("http://api.tianapi.com/txapi/hsjz/index?key=" + APIKEY,
+                    function (data, status) {
+                        console.log(data);
+                        $('.content').append(template('hushan', data));
+                    }
+                );
+
+                //古籍名句：http://api.tianapi.com/txapi/gjmj/index?key=APIKEY
+                $.get("http://api.tianapi.com/txapi/gjmj/index?key=" + APIKEY,
+                    function (data, status) {
+                        console.log(data);
+                        $('.content').append(template('mingju', data));
+                    }
+                );
+
+                //励志古言：http://api.tianapi.com/txapi/lzmy/index?key=APIKEY
+                $.get("http://api.tianapi.com/txapi/lzmy/index?key=" + APIKEY,
+                    function (data, status) {
+                        console.log(data);
+                        $('.content').append(template('lizhiguyan', data));
+                    }
+                );
+
+                //经典台词：http://api.tianapi.com/txapi/dialogue/index?key=APIKEY
+                $.get("http://api.tianapi.com/txapi/dialogue/index?key=" + APIKEY,
+                    function (data, status) {
+                        console.log(data);
+                        $('.content').append(template('taici', data));
+                    }
+                );
+
+                //藏头诗：http://api.tianapi.com/txapi/cangtoushi/index?key=APIKEY&word=天行数据
+                $('#hanzi').keydown(function (e) {
+                    if (e.keyCode == 13) {
+                        var word = $(this).val();
+                        $.get("http://api.tianapi.com/txapi/cangtoushi/index?key=" + APIKEY + '&word=' + word,
+                            function (data, status) {
+                                console.log(data);
+                                $('#cangtouText').text(data.newslist[0].list);
+                            }
+                        );
+                    }
+                })
+            }
+            getXiao();
+
             $('#next').click(function () {
-                window.location.reload();
+                $('.content').html('<div class="item"><h2>藏头诗生成器</h2><input type="text" placeholder="请输入汉字,enter键结束" id="hanzi"><div id="cangtouText"></div></div>');
+                getXiao();
             })
 
-            //舔狗日记：http://api.tianapi.com/txapi/tiangou/index
-            $.get("http://api.tianapi.com/txapi/tiangou/index?key=" + APIKEY,
-                function (data, status) {
-                    console.log(data);
-                    $('.content').append(template('tiangou', data));
-                }
-            );
-
-            //彩虹屁：http://api.tianapi.com/txapi/tiangou/index
-            $.get("http://api.tianapi.com/txapi/caihongpi/index?key=" + APIKEY,
-                function (data, status) {
-                    console.log(data);
-                    $('.content').append(template('caihongpi', data));
-                }
-            );
-
-            //毒鸡汤：http://api.tianapi.com/txapi/tiangou/index
-            $.get("http://api.tianapi.com/txapi/dujitang/index?key=" + APIKEY,
-                function (data, status) {
-                    console.log(data);
-                    $('.content').append(template('jitang', data));
-                }
-            );
-
-            //朋友圈文案：http://api.tianapi.com/txapi/pyqwenan/index?key=APIKEY
-            $.get("http://api.tianapi.com/txapi/pyqwenan/index?key=" + APIKEY,
-                function (data, status) {
-                    console.log(data);
-                    $('.content').append(template('wenan', data));
-                }
-            );
-
-            //互删句子：http://api.tianapi.com/txapi/hsjz/index?key=APIKEY
-            $.get("http://api.tianapi.com/txapi/hsjz/index?key=" + APIKEY,
-                function (data, status) {
-                    console.log(data);
-                    $('.content').append(template('hushan', data));
-                }
-            );
-
-            //古籍名句：http://api.tianapi.com/txapi/gjmj/index?key=APIKEY
-            $.get("http://api.tianapi.com/txapi/gjmj/index?key=" + APIKEY,
-                function (data, status) {
-                    console.log(data);
-                    $('.content').append(template('mingju', data));
-                }
-            );
-
-            //励志古言：http://api.tianapi.com/txapi/lzmy/index?key=APIKEY
-            $.get("http://api.tianapi.com/txapi/lzmy/index?key=" + APIKEY,
-                function (data, status) {
-                    console.log(data);
-                    $('.content').append(template('lizhiguyan', data));
-                }
-            );
-
-            //经典台词：http://api.tianapi.com/txapi/dialogue/index?key=APIKEY
-            $.get("http://api.tianapi.com/txapi/dialogue/index?key=" + APIKEY,
-                function (data, status) {
-                    console.log(data);
-                    $('.content').append(template('taici', data));
-                }
-            );
-
-            //藏头诗：http://api.tianapi.com/txapi/cangtoushi/index?key=APIKEY&word=天行数据
-            $('#hanzi').keydown(function (e) {
-                if (e.keyCode == 13) {
-                    var word = $(this).val();
-                    $.get("http://api.tianapi.com/txapi/cangtoushi/index?key=" + APIKEY + '&word=' + word,
-                        function (data, status) {
-                            console.log(data);
-                            $('#cangtouText').text(data.newslist[0].list);
-                        }
-                    );
-                }
-            })
             $('#hanzi').blur(function () {
                 $(this).val() = '';
             })
