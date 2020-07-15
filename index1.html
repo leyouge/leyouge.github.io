@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./libs/jquery-1.12.4.min.js"></script>
+    <script src="./libs/template-web.js"></script>
+    <style>
+        #bgcDiv {
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: -99;
+        }
+
+        #bgcDiv img {
+            width: 100%;
+            min-height: 1000px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #fff;
+            background-image: linear-gradient(to right,
+                    red,
+                    orange,
+                    yellow,
+                    green,
+                    cyan,
+                    blue,
+                    purple);
+            font-style: 25px;
+            font-family: '楷体';
+            padding: 10px 0;
+            margin-top: 50px;
+        }
+
+        .btn {
+            width: 1000px;
+            height: 100px;
+            margin: 20px auto;
+            position: relative;
+        }
+
+        button {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            width: 180px;
+            height: 50px;
+            font-size: 20px;
+            color: red;
+            border: 2px solid seagreen;
+        }
+
+        #bgc {
+            right: 200px;
+            bottom: 0;
+        }
+
+        #next {
+            cursor: pointer;
+        }
+
+        .content {
+            width: 1000px;
+            border: 2px solid red;
+            border-radius: 10px;
+            margin: 0px auto;
+            padding: 10px;
+            text-align: center;
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .item {
+            width: 300px;
+            height: 200px;
+            border: 2px solid green;
+            margin: 14px;
+            background-color: pink;
+            color: red;
+            overflow: auto;
+        }
+
+        .item:nth-child(2n) {
+            background-color: aqua;
+            color: deeppink;
+        }
+
+        .item:nth-child(3n) {
+            background-color: skyblue;
+            color: blue;
+        }
+
+        .item:nth-child(4n) {
+            background-color: slateblue;
+            color: gold;
+        }
+
+        .item:nth-child(5n) {
+            background-color: sandybrown;
+            color: forestgreen;
+        }
+
+        .item:nth-child(6n) {
+            background-color: darkorange;
+            color: indigo;
+        }
+
+        input {
+            width: 150px;
+            height: 25px;
+            border: 1px solid red;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="bgcDiv">
+        <img src="" alt="">
+    </div>
+    <div id="main">
+        <h1>每 日 一 笑</h1>
+        <div class="btn">
+            <button id="bgc">关闭切换背景图</button>
+            <button id="next">不好笑，下一条</button>
+        </div>
+        <div class="content">
+            <div class="item">
+                <h2>藏头诗生成器</h2>
+                <input type="text" placeholder="请输入汉字,enter键结束" id='hanzi'>
+                <div id="cangtouText"></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script id="tiangou" type="text/html">
+        <div class="item">
+            <h2>舔狗日记</h2>
+            <div>
+                {{newslist[0].content}}
+            </div>
+        </div>
+    </script>
+
+    <script id="caihongpi" type="text/html">
+        <div class="item">
+            <h2>彩虹屁</h2>
+            <div>
+                {{newslist[0].content}}
+            </div>
+        </div>
+    </script>
+
+    <script id="jitang" type="text/html">
+        <div class="item">
+            <h2>毒鸡汤</h2>
+            <div>
+                {{newslist[0].content}}
+            </div>
+        </div>
+    </script>
+
+    <script id="wenan" type="text/html">
+        <div class="item">
+            <h2>朋友圈文案</h2>
+            <div>
+                {{newslist[0].content}}
+            </div>
+        </div>
+    </script>
+
+    <script id="hushan" type="text/html">
+        <div class="item">
+            <h2>互删句子</h2>
+            <div>
+                {{newslist[0].content}}
+            </div>
+        </div>
+    </script>
+
+    <script id="mingju" type="text/html">
+        <div class="item">
+            <h2>古籍名句</h2>
+            <div>
+                <p>{{newslist[0].content}}</p> 
+                <p>----{{newslist[0].source}}</p>
+            </div>
+        </div>
+    </script>
+
+    <script id="lizhiguyan" type="text/html">
+        <div class="item">
+            <h2>励志古言</h2>
+            <div>
+                <p>原文：{{newslist[0].saying}}</p>
+                <p>译文：{{newslist[0].transl}}</p>
+                <p>来源：{{newslist[0].source}}</p>
+            </div>
+        </div>
+    </script>
+
+    <script id="taici" type="text/html">
+        <div class="item">
+            <h2>经典台词</h2>
+            <div>
+                <p>汉语：{{newslist[0].dialogue}}</p>
+                <p>英语：{{newslist[0].english}}</p>
+                <p>来源：{{newslist[0].source}}</p>
+            </div>
+        </div>
+    </script>
+
+    <script id="rizhi" type="text/html">
+        <div class="item">
+            <h2>机器人日志</h2>
+            <div>
+                {{newslist[0].content}}
+            </div>
+        </div>
+    </script>
+
+    <script>
+        $(function () {
+            var APIKEY = 'bdc530fa425eb6eba7d4701ecce34084';
+
+            // 获取随机大图:https://autumnfish.cn/api/cover/random
+            //     请求方法：get
+            //     请求参数：无
+
+            //随机获取大图函数：
+            // function getImg() {
+            //     $.ajax({
+            //         url: 'https://autumnfish.cn/api/cover/random',
+            //         type: 'get',
+            //         dataType: 'json',
+            //         success: function (backData) {
+            //             // console.log(backData);
+            //             $('body').css('background', 'url(' + backData.url + ') no-repeat');
+            //             $('body').css('background-size', 'cover');
+            //         }
+            //     });
+            // }
+            // getImg();
+            // setInterval(function () {
+            //     getImg();
+            // }, 500)
+
+
+            //定义随机获取大图的函数
+            function getImg() {
+                //定义1-15的随机数
+                var num = Math.floor(Math.random() * 15 + 1);
+                var imgSrc = './images/' + num + '.jpg';
+                // console.log(num);
+                $('#bgcDiv img').attr('src', imgSrc);
+            }
+
+            getImg();
+
+            var timeId = setInterval(function () {
+                getImg();
+            }, 3000)
+
+            $('#bgc').click(function () {
+                if ($(this).text() == '关闭切换背景图') {
+                    // console.log($(this).text());
+                    $(this).text('开启切换背景图');
+                    clearInterval(timeId);
+                } else {
+                    $(this).text('关闭切换背景图');
+                    timeId = setInterval(function () {
+                        getImg();
+                    }, 3000);
+                }
+            })
+
+            // $('#next').click(function () {
+            //     window.location.reload();
+            // })
+
+            function getXiao() {
+                //舔狗日记：http://api.tianapi.com/txapi/tiangou/index
+                $.get("http://api.tianapi.com/txapi/tiangou/index?key=" + APIKEY,
+                    function (data, status) {
+                        console.log(data);
+                        $('.content').append(template('tiangou', data));
+                    }
+                );
+
+                //彩虹屁：http://api.tianapi.com/txapi/tiangou/index
+                $.get("http://api.tianapi.com/txapi/caihongpi/index?key=" + APIKEY,
+                    function (data, status) {
+                        console.log(data);
+                        $('.content').append(template('caihongpi', data));
+                    }
+                );
+
+                //毒鸡汤：http://api.tianapi.com/txapi/tiangou/index
+                $.get("http://api.tianapi.com/txapi/dujitang/index?key=" + APIKEY,
+                    function (data, status) {
+                        console.log(data);
+                        $('.content').append(template('jitang', data));
+                    }
+                );
+
+                //朋友圈文案：http://api.tianapi.com/txapi/pyqwenan/index?key=APIKEY
+                $.get("http://api.tianapi.com/txapi/pyqwenan/index?key=" + APIKEY,
+                    function (data, status) {
+                        console.log(data);
+                        $('.content').append(template('wenan', data));
+                    }
+                );
+
+                //互删句子：http://api.tianapi.com/txapi/hsjz/index?key=APIKEY
+                $.get("http://api.tianapi.com/txapi/hsjz/index?key=" + APIKEY,
+                    function (data, status) {
+                        console.log(data);
+                        $('.content').append(template('hushan', data));
+                    }
+                );
+
+                //古籍名句：http://api.tianapi.com/txapi/gjmj/index?key=APIKEY
+                $.get("http://api.tianapi.com/txapi/gjmj/index?key=" + APIKEY,
+                    function (data, status) {
+                        console.log(data);
+                        $('.content').append(template('mingju', data));
+                    }
+                );
+
+                //励志古言：http://api.tianapi.com/txapi/lzmy/index?key=APIKEY
+                $.get("http://api.tianapi.com/txapi/lzmy/index?key=" + APIKEY,
+                    function (data, status) {
+                        console.log(data);
+                        $('.content').append(template('lizhiguyan', data));
+                    }
+                );
+
+                //经典台词：http://api.tianapi.com/txapi/dialogue/index?key=APIKEY
+                $.get("http://api.tianapi.com/txapi/dialogue/index?key=" + APIKEY,
+                    function (data, status) {
+                        console.log(data);
+                        $('.content').append(template('taici', data));
+                    }
+                );
+
+                //藏头诗：http://api.tianapi.com/txapi/cangtoushi/index?key=APIKEY&word=天行数据
+                $('#hanzi').keydown(function (e) {
+                    if (e.keyCode == 13) {
+                        var word = $(this).val();
+                        $.get("http://api.tianapi.com/txapi/cangtoushi/index?key=" + APIKEY + '&word=' + word,
+                            function (data, status) {
+                                console.log(data);
+                                $('#cangtouText').text(data.newslist[0].list);
+                            }
+                        );
+                    }
+                })
+            }
+            getXiao();
+
+            $('#next').click(function () {
+                $('.content').html('<div class="item"><h2>藏头诗生成器</h2><input type="text" placeholder="请输入汉字,enter键结束" id="hanzi"><div id="cangtouText"></div></div>');
+                getXiao();
+            })
+
+            $('#hanzi').blur(function () {
+                $(this).val() = '';
+            })
+        })
+    </script>
+</body>
+
+</html>
